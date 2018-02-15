@@ -1,7 +1,7 @@
-#include <config.h>
+#include "config.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
-const uint16_t port = 80;
+const uint16_t PORT = 80;
 const char * host = "192.168.1.183"; // ip or dns
 
 
@@ -30,18 +30,22 @@ void setup() {
     delay(500);
 }
 
+void loop(){
+  String body = ("{\"on\":false}");
+  hue(body, 1, HUE_IP, HUE_APIKEY);
+  }
 
 
-      void hue(String body, uint8_t light, String hueIp, String HUEAPIKEY){
+      void hue(String body, uint8_t light, String HUE_IP, String HUE_APIKEY){
 
         Serial.print("connecting to ");
         Serial.println(host);
         WiFiClient client;
 
-        if (client.connect(hueIp, 80)) {
+        if (client.connect(HUE_IP, 80)) {
 
           String path =
-              "PUT /api/" + HUEAPIKEY + "/lights/" + String(light) + "/state";
+              "PUT /api/" + HUE_APIKEY + "/lights/" + String(light) + "/state";
           client.println(" HTTP/1.1");
           client.println("Cache-Control: no-cache");
           client.println("Content-Type: application/json");
@@ -80,8 +84,3 @@ void setup() {
     Serial.println("wait 5 sec...");
     delay(5000);
   }
-
-  void loop(){
-    String body = ("{\"on\":false}");
-    hue(body, 1, HUEIP, HUEAPIKEY);
-    }
